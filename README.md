@@ -6,11 +6,11 @@ Go to whmcsroot/includes/ and perform the following.
 
 ```
 
-cd /var/www/html/whmcs/
+cd /var/www/html/whmcs/includes
 
 git clone https://gitlab.com/megamsys/whmcs_hooks
 
-cp whmcs_hooks ./Hooks
+cp -r whmcs_hooks ./hooks
 
 rm -rf whmcs_hooks
 

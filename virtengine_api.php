@@ -1,3 +1,5 @@
+include(ROOTDIR.'/includes/hooks/virtengine_db.php');
+
 <?php
 
 //====== TO_DO: START: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
@@ -5,8 +7,8 @@ define(MASTER_KEY, '3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994
 define(GATEWAY, '13.70.94.139:9000/v2');
 //====== TO_DO: END: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
 
-function build_hmac($api_url, $data) {
-  //Converting the body into md5 hash
+function build_hmac($api_url, $data, $user_id) {
+//Converting the body into md5 hash
   $body_digest = openssl_digest( $data,'md5', true );
   //Encoding the body_digest with base64 encde
   $encoded_body = base64_encode( $body_digest );
@@ -15,9 +17,8 @@ function build_hmac($api_url, $data) {
   //Forming the signature
   $signature = $current_date . "\n" .$api_url. "\n" . $encoded_body;
   //Get Client Custom Fields
-  $vertice_apikey = {MASTERKEY};
-
-  $vertice_email = fetchFieldByName('email',$vars['userid']);
+  $vertice_apikey = (MASTER_KEY);
+  $vertice_email = fetchFieldByName('email', $user_id);
   //Creating HMAC hash with sha1
   $hash = hash_hmac( 'sha256', rtrim($signature), $vertice_apikey );
   //Final Hmac
@@ -31,11 +32,10 @@ function build_hmac($api_url, $data) {
   return $built;
 }
 
-function build_header($headerArgs) {
-  $final_hmac = $headerArgs['final_hmac '];
+function build_header($headerArgs, $user_id) {
+  $final_hmac = $headerArgs['final_hmac'];
   $current_date = $headerArgs['current_date'];
-
-  $organization_id = fetchFieldByName('org_id',$vars['userid']);
+  $organization_id = fetchFieldByName('org_id',$user_id);
 
   $headers =  array(
     'Accept: application/json',
@@ -49,16 +49,15 @@ function build_header($headerArgs) {
 
     return $headers;
 }
-
-function invoke_api($api_url, $body_json) {
+function invoke_api($api_url, $body_json, $user_id) {
   $data = json_encode($body_json);
 
-  $headerArgs = build_hmac($api_url,$data)
+  $headerArgs = build_hmac($api_url,$data, $user_id);
 
-  $headers = build_header($headerArgs)
+  $headers = build_header($headerArgs, $user_id);
 
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, {$GATEWAY}.$api_url);
+  curl_setopt($ch, CURLOPT_URL, (GATEWAY).$api_url);
 
   curl_setopt($ch,CURLOPT_HTTPHEADER, $headers);
   curl_setopt($ch, CURLOPT_POST, true);
@@ -72,8 +71,7 @@ function invoke_api($api_url, $body_json) {
   $curl_error = curl_error ( $ch );
 
   curl_close($ch);
-
-  return  array('Request: ' => $e, 'Api Response : ' => $response,'Http Code : ' => $get_info,'Curl Error : ' => $curl_error);
+  return  array('Request: ' => $body_json, 'Api Response : ' => $response,'Http Code : ' => $get_info,'Curl Error : ' => $curl_error);
 }
 
 ?>

@@ -6,10 +6,9 @@ include(ROOTDIR.'/includes/hook/virtengine_db.php');
 function create_account( $vars ) {
     $e = new Account();
     $e->api_key = bin2hex(openssl_random_pseudo_bytes(16));
-
-    $e->name->first_name  = $vars['firstname'];
-    $e->name->last_name  = $vars['lastname'];
     $e->email = $vars['email'];
+    $e->name->first_name  = $vars['firstname'];
+    $e->name->last_name  = $vars['lastname'];  
     $e->password->password_hash = base64_encode($vars['password']);
     $e->password->password_reset_key = '';
     $e->password->password_reset_sent_at = '';
@@ -25,7 +24,7 @@ function create_account( $vars ) {
     $e->phone->phone_verified = null;
     $e->registration_ip_address = '';
     $e->states->authority = null;
-    $e->states->active = true;
+    $e->states->active = "true";
     $e->states->blocked = null;
     $e->states->staged = null;
     $e->suspend->suspended = null;
