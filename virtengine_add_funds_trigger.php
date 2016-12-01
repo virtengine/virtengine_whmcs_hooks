@@ -8,9 +8,10 @@ function add_funds_trigger( $vars ) {
 	$e->tranid = $vars['transid'];
 	$e->trandate = $date;
 	$e->currency_type = "USD";
+	$user_id = $vars['userid'];
 
 	//Forming the signature
-  $res = invoke_api("/v2/billingtransactions/content", $e);
+  $res = invoke_api("/billingtransactions/content", $e, $user_id);
 
   logActivity( json_encode( $res ) );
 }
