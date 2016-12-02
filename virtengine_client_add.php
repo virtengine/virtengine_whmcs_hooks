@@ -8,7 +8,7 @@ function create_account( $vars ) {
     $e->api_key = bin2hex(openssl_random_pseudo_bytes(16));
     $e->email = $vars['email'];
     $e->name->first_name  = $vars['firstname'];
-    $e->name->last_name  = $vars['lastname'];  
+    $e->name->last_name  = $vars['lastname'];
     $e->password->password_hash = base64_encode($vars['password']);
     $e->password->password_reset_key = '';
     $e->password->password_reset_sent_at = '';
@@ -31,7 +31,7 @@ function create_account( $vars ) {
     $e->suspend->suspended_at = null;
     $e->suspend->suspended_till = null;
 
-    $res = invoke_api('/accounts/content', $e);
+    $res = invoke_api('/v2/accounts/content', $e);
 
     logActivity( json_encode( $res ) );
 }
