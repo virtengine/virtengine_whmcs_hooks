@@ -3,8 +3,8 @@ include(ROOTDIR.'/includes/hook/virtengine_db.php');
 <?php
 function verify_email($vars) {
 $email = $vars['email'];
-$user_id =  $vars['userid'];
-$res = invoke_api('/v2/accounts/$email',$email, $user_id);
+//here we dont have user_id to pass
+$res = invoke_api('/v2/accounts/'.$email,$email, $email);
 logActivity( json_encode( $res ) );
 if($res){
 $error = "Email alredy exit in vertice";
