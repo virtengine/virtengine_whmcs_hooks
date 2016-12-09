@@ -12,6 +12,6 @@ return $error;
 }
 }
 
-add_hook('ClientDetailsValidation',0,'verify_email');
+//add_hook('ClientDetailsValidation',0,'verify_email');
 
 ?>

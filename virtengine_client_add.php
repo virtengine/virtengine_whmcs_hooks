@@ -31,9 +31,16 @@ function create_account( $vars ) {
     $e->suspend->suspended_at = null;
     $e->suspend->suspended_till = null;
 
-    $res = invoke_api('/v2/accounts/content', $e);
-
-    logActivity( json_encode( $res ) );
+    $org_id = fetchFieldByName('org_id', $vars['userid']);
+    if (empty($org_id))
+    {
+      $res = invoke_api('/v2/accounts/content', $e);
+      logActivity( json_encode( $res ) );
+    }
+    else
+    {
+      return false;
+    }
 }
 
 add_hook('ClientAdd',1,'create_account');
