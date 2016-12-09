@@ -12,11 +12,19 @@ function create_addon( $vars ) {
         $e->options = null;
         $e->created_at = null;
         $user_id = $vars['userid'];
-        $res = invoke_api('/addons/content', $e, $user_id);
-        logActivity( json_encode( $res ) );
-}
+        $org_id = fetchFieldByName('org_id', $vars['userid']);
+        if (empty($org_id))
+        {
+          $res = invoke_api('/v2/accounts/content', $e);
+          logActivity( json_encode( $res ) );
+        }
+        else
+        {
+          return false;
+        }
+    }
 
-add_hook('ClientAdd',1,'create_addon');
+//add_hook('ClientAdd',1,'create_addon');
 
 class Addon {
       public $account_id;

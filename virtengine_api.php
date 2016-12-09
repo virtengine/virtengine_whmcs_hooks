@@ -4,7 +4,7 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 
 //====== TO_DO: START: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
 define(MASTER_KEY, '3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994ee3f');
-define(GATEWAY, '13.70.94.139:9000/v2');
+define(GATEWAY, '13.70.94.139:9000');
 //====== TO_DO: END: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
 
 function build_hmac($api_url, $data, $user_id) {
@@ -18,7 +18,7 @@ function build_hmac($api_url, $data, $user_id) {
   $signature = $current_date . "\n" .$api_url. "\n" . $encoded_body;
   //Get Client Custom Fields
   $vertice_apikey = (MASTER_KEY);
-  $vertice_email = fetchFieldByName('email', $user_id);
+  $vertice_email = fetchByName($user_id);
   //Creating HMAC hash with sha1
   $hash = hash_hmac( 'sha256', rtrim($signature), $vertice_apikey );
   //Final Hmac
@@ -27,7 +27,7 @@ function build_hmac($api_url, $data, $user_id) {
   //we are sticking it in a hash
   $built=array();
   $built['final_hmac']=$final_hmac;
-  $built['current_date']=$final_date;
+  $built['current_date']=$current_date;
 
   return $built;
 }
