@@ -15,7 +15,7 @@ function create_addon( $vars ) {
         $org_id = fetchFieldByName('org_id', $vars['userid']);
         if (empty($org_id))
         {
-          $res = invoke_api('/v2/accounts/content', $e);
+          $res = invoke_api('/v2/addons/content', $e,  $user_id);
           logActivity( json_encode( $res ) );
         }
         else
