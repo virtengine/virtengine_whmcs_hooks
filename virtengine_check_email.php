@@ -1,5 +1,5 @@
-include(ROOTDIR.'/includes/hook/virtengine_api.php');
-include(ROOTDIR.'/includes/hook/virtengine_db.php');
+include(ROOTDIR.'/includes/hooks/virtengine_api.php');
+include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 <?php
 function verify_email($vars) {
 $email = $vars['email'];
