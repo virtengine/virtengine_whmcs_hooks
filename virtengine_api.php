@@ -18,8 +18,14 @@ function build_hmac($api_url, $data, $user_id) {
   $signature = $current_date . "\n" .$api_url. "\n" . $encoded_body;
   //Get Client Custom Fields
   $vertice_apikey = (MASTER_KEY);
-  $vertice_email = fetchByName($user_id);
-  //Creating HMAC hash with sha1
+  $vertice_email = fetch_user($user_id);
+
+  logActivity("=Debug: ---  build_hmac ".$api_url);
+  logActivity("=Debug: sign   is".$signature);
+  logActivity("=Debug: email  is".$vertice_email);
+  logActivity("=Debug: apikey is".$vertice_apikey);
+
+  //Creating HMAC hash with sha256
   $hash = hash_hmac( 'sha256', rtrim($signature), $vertice_apikey );
   //Final Hmac
   $final_hmac = $vertice_email . ':' . $hash;
@@ -37,6 +43,10 @@ function build_header($headerArgs, $user_id) {
   $current_date = $headerArgs['current_date'];
   $organization_id = fetchFieldByName('org_id',$user_id);
 
+  logActivity("=Debug: ---  build_header");
+  logActivity("=Debug: final_hmac:".$final_hmac);
+  logActivity("=Debug: currrent_date:".$current_date);
+
   $headers =  array(
     'Accept: application/json',
     'Content-Type: application/json',
@@ -50,6 +60,10 @@ function build_header($headerArgs, $user_id) {
     return $headers;
 }
 function invoke_api($api_url, $body_json, $user_id) {
+  logActivity("=Debug: ---  Vertice API: STARTS");
+  logActivity("=Debug: ---  API Parms:".$body_json);
+  logActivity("=Debug: ---  API Userid:".$user_id);
+
   $data = json_encode($body_json);
 
   $headerArgs = build_hmac($api_url,$data, $user_id);
