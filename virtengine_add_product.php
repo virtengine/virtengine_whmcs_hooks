@@ -3,7 +3,6 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 <?php
 
  function createProduct($vars) {
-
      $orderId= $vars['OrderID'];
      $user_id= $vars['userid']
      $e = new Product();
@@ -21,7 +20,6 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
      $e->updated_at = " ";
      $res = invoke_api('/v2/quotas/content',$e, $user_id);
      logActivity( json_encode( $res ) );
-
  }
 
  add_hook("AfterShoppingCartCheckout",1,"createProduct");
