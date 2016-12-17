@@ -17,7 +17,7 @@ function fetchFieldByName( $name, $userid ){
         return false;
 }
 
-function fetchByName( $userid ){
+function fetch_user( $userid ){
         if(empty($userid) )
                 return false;
 
@@ -28,6 +28,23 @@ function fetchByName( $userid ){
         if( mysql_num_rows($res) > 0 ) {
           $row = mysql_fetch_assoc($res);
           return $row['email'];
+        }
+
+        return false;
+}
+
+function fetch_by_id($tbl, $id ) {
+
+        if(empty($id))
+           return false;
+
+        $query = "SELECT * FROM ".$tbl." WHERE  id = '".$id."'";
+
+        $res = full_query($query);
+
+        if( mysql_num_rows($res) > 0 ) {
+          $row = mysql_fetch_assoc($res);
+          return $row;
         }
 
         return false;
