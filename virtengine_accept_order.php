@@ -86,8 +86,8 @@ while ($data = mysql_fetch_array($result)) {
 	$lastupdate = $data['lastupdate'];
 	$serverdetails = $data['serverdetails'];
 	$serverdetails = explode("|", $serverdetails);
+  if ($order_id == $orderid) {
   $apiresults['products']['product'][] = array(
-    if($order_id == $orderid) {
     "id" => $id,
     "clientid" => $userid,
     "orderid" => $orderid,
@@ -103,9 +103,9 @@ while ($data = mysql_fetch_array($result)) {
     "disklimit" => $disklimit,
     "bwusage" => $bwusage,
     "bwlimit" => $bwlimit,
-    "lastupdate" => $lastupdate,
-    }
+    "lastupdate" => $lastupdate,    
     );
+    }
   }
 
  return $apiresults
