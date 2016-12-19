@@ -11,7 +11,7 @@ function build_hmac($api_url, $data, $user_id) {
 //Converting the body into md5 hash
   $body_digest = openssl_digest( $data,'md5', true );
   //Encoding the body_digest with base64 encde
-  $encoded_body = base64_encode( $body_digest );
+  $encoded_body = rtrim(strtr(base64_encode($body_digest), '+/', '-_'), '=');
   //Current date for example
   $current_date = date('Y-m-d H:i');
   //Forming the signature
