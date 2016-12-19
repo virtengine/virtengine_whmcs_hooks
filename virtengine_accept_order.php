@@ -12,29 +12,24 @@ function after_accept_order($vars) {
 
     logActivity("=Debug: order is:".$order_id);
 
-    $orders = fetch_by_id('tblorders', $order_id)
+    $orders = fetch_by_id('tblorders', $order_id);
 
     logActivity("=Debug: client products is:".json_encode($orders));
 
     $user_id = $orders['userid'];
 
-    $products = getClientProducts($user_id, $order_id)
+    $products = getClientProducts($user_id, $order_id);
 
-    logActivity("=Debug: products is:".json_encode($products));
+    $product_details = fetch_by_id('tblproducts', $products['products']['product'][0]['pid']);
 
-    $product_details = fetch_by_id('tblproducts', $products['product'][0]['pid'])
+    logActivity("=Debug: ordered product is:".json_encode($product_details));
 
-    logActivity("=Debug: products is:".json_encode($product_details));
+    $vertice_email = fetch_user($user_id);
 
-    /*$e = new Quotas();
-    $e->id = $vars['email'];
-    $e->account_id = $vars['account_id'];
-    $e->name = $vars['name'];
-    $e->cost = $vars['cost'];
-    $e->allowed->cpu = $vars['cpu'];
-    $e->allowed->ram = $vars['email'];
-    $e->allowed->disk = $vars['disk'];
-    $e->allowed->disk_type = $vars['disk_type'];
+    $e = new OrderedQuotas();
+    $e->account_id = $vertice_email;
+    $e->name = $product_details['name'];
+    $e->allowed-> = parse_allowed($product_details['description']);
     $e->allocated_to = " ";
     $e->inputs = [];
     $e->created_at = " ";
@@ -42,8 +37,18 @@ function after_accept_order($vars) {
 
     $res = invoke_api('/v2/quotas/content',$e, $user_id);
     logActivity( json_encode( $res ) );
-    */
+
 }
+
+function parse_allowed($string) {
+  $array = preg_split('/rn|n|r/', $string);
+  $result = array();
+  foreach ($array as $value) {
+    $arr = explode('-', $value);
+    array_push($result, array(trim($arr[0]) => trim($arr[1])));
+  }
+  return $result
+ }
 
 function getClientProducts($client_id, $order_id) {
 
@@ -103,7 +108,7 @@ while ($data = mysql_fetch_array($result)) {
     "disklimit" => $disklimit,
     "bwusage" => $bwusage,
     "bwlimit" => $bwlimit,
-    "lastupdate" => $lastupdate,    
+    "lastupdate" => $lastupdate,
     );
     }
   }
@@ -114,7 +119,7 @@ while ($data = mysql_fetch_array($result)) {
 
 add_hook("AcceptOrder",1,"after_accept_order");
 
-class Quotas {
+class OrderedQuotas {
       public $id;
       public $account_id;
       public $name;
