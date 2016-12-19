@@ -12,9 +12,21 @@ function after_accept_order($vars) {
 
     $user_id= $vars['userid']
 
-    $order = fetch_by_id($order_id)
+    logActivity("=Debug: user is:".$user_id);
 
-    logActivity("=Debug: order is:".$order);
+    logActivity("=Debug: order is:".$order_id);
+
+    $client_order_details = fetch_by_id('tblclientdetails', $user_id)
+
+    logActivity("=Debug: client products is:".json_encode($client_order_details));
+
+    $product_id = fetch_column_in_result($client_order_details, 'products', 'pid')
+
+    logActivity(json_encode($product_id));
+
+    $product_details = fetch_by_id('tblproducts', $product_id)
+
+    logActivity("=Debug: products is:".json_encode($product_id));
 
     /*$e = new Quotas();
     $e->id = $vars['email'];
