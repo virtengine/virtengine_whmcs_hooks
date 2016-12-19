@@ -5,11 +5,13 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 
 function verify_email($vars) {
     $email = $vars['email'];
-    //here we dont have user_id to pass
+
     $res = invoke_api('/v2/accounts/'.$email,$email, $email);
+
     logActivity( json_encode( $res ) );
+
     if($res){
-      $error = "Email alredy exit in vertice";
+      $error = "Email already exits in VirtEngine";
       return $error;
     }
 }

@@ -34,7 +34,6 @@ function fetch_user( $userid ){
 }
 
 function fetch_by_id($tbl, $id ) {
-
         if(empty($id))
            return false;
 
@@ -48,6 +47,18 @@ function fetch_by_id($tbl, $id ) {
         }
 
         return false;
+}
+
+function fetch_column_in_result($inp, $parent, $child) {
+  $rows = json_decode($inp,true);
+
+  $res=array();
+
+  foreach($rows[$parent] as $row) {
+    $res[$row[$child]] = $row[$child];
+  }
+  logActivity(json_encode($res));
+  return $res;
 }
 
 ?>
