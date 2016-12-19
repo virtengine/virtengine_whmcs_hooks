@@ -18,13 +18,13 @@ function after_accept_order($vars) {
 
     $user_id = $orders['userid'];
 
-    $products = getClientProducts($user_id)
+    $products = getClientProducts($user_id, $order_id)
 
     logActivity("=Debug: products is:".json_encode($products));
 
-    //$product_details = fetch_by_id('tblproducts', $product_id)
+    $product_details = fetch_by_id('tblproducts', $products['product'][0]['pid'])
 
-    //logActivity("=Debug: products is:".json_encode($product_details));
+    logActivity("=Debug: products is:".json_encode($product_details));
 
     /*$e = new Quotas();
     $e->id = $vars['email'];
@@ -45,12 +45,12 @@ function after_accept_order($vars) {
     */
 }
 
-function getClientProducts($clientid) {
+function getClientProducts($client_id, $order_id) {
 
   $where = array();
 
-  if ($clientid) {
-      $where["tblhosting.userid"] = $clientid;
+  if ($client_id) {
+      $where["tblhosting.userid"] = $client_id;
   }
 
 $result = select_query("tblhosting", "COUNT(*)", $where, "", "", "", "tblproducts ON tblproducts.id=tblhosting.packageid INNER JOIN tblproductgroups ON tblproductgroups.id=tblproducts.gid");
@@ -87,6 +87,7 @@ while ($data = mysql_fetch_array($result)) {
 	$serverdetails = $data['serverdetails'];
 	$serverdetails = explode("|", $serverdetails);
   $apiresults['products']['product'][] = array(
+    if($order_id == $orderid) {
     "id" => $id,
     "clientid" => $userid,
     "orderid" => $orderid,
@@ -103,6 +104,7 @@ while ($data = mysql_fetch_array($result)) {
     "bwusage" => $bwusage,
     "bwlimit" => $bwlimit,
     "lastupdate" => $lastupdate,
+    }
     );
   }
 
