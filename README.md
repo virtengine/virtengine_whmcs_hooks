@@ -16,10 +16,12 @@ rm -rf whmcs_hooks
 
 ```
 
+(or) Download the latest package from google drive contact hello@virtengine.com
+
 ## 2. Create the following Client Custom Fields.
 
-1. vertice_email (Field Type => Text Box)
-2. organization_id (Field Type => Text Box)
+1. email (Field Type => Text Box)
+2. org_id (Field Type => Text Box)
 
 For creating the custom fields goto
 `Setup -> Client Custom Fields ` in whmcsroot

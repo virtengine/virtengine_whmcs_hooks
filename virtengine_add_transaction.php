@@ -1,6 +1,8 @@
 <?php
 
-function add_funds_trigger( $vars ) {
+function after_add_transaction( $vars ) {
+	logActivity("=Debug: ---  Add transaction: STARTS");
+	logActivity("=Debug: ---  Parms:".$vars);
 
 	$date = date('d/m/Y', strtotime($vars['date']));
 	$e = new TransactionBill();
@@ -13,14 +15,14 @@ function add_funds_trigger( $vars ) {
 	$e->currency_type = "USD";
 	$user_id = $vars['userid'];
 
-	//Forming the signature
+ //Forming the signature
   $res = invoke_api("/v2/billingtransactions/content", $e, $user_id);
 
   logActivity( json_encode( $res ) );
 }
 
 
-add_hook('AddTransaction',1,'add_funds_trigger');
+add_hook('AddTransaction',1,'after_add_transaction');
 
 class TransactionBill {
 	    public $gateway;
