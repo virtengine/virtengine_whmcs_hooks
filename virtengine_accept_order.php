@@ -25,7 +25,7 @@ function after_accept_order($vars) {
     logActivity( json_encode( $res ) );
 }
 function parse_allowed($string) {
-  $array = preg_split('/rn|n|r/', $string);
+  $array = explode("\n", $string);
   $result = array();
   foreach ($array as $value) {
     $arr = explode('-', $value);
