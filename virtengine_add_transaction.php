@@ -1,3 +1,5 @@
+include(ROOTDIR.'/includes/hooks/virtengine_api.php');
+include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 <?php
 define (CLOUD_ONDEMAND, "Cloud On demand billing");
 function after_add_transaction( $vars ) {
