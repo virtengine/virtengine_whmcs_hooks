@@ -3,15 +3,15 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 include(ROOTDIR.'/includes/hooks/virtengine_accept_order.php');
 <?php
 function invoice_paid($vars) {
-    logActivity("=Debug: ---  Accept order: STARTS");
+    logActivity("=Debug: ---  Add paid: STARTS");
     logActivity("=Debug: ---  Parms:".$vars);
     $invoiceid= $vars['invoiceid'];
-    logActivity("=Debug: order is:".$invoiceid);
+    logActivity("=Debug: invoice is:".$invoiceid);
     $user_id = getInvoiceItem($invoiceid);
-    logActivity("=Debug: client products is:".json_encode($user_id));
+    logActivity("=Debug: client id  is:".json_encode($user_id));
     $orders = fetch_by_user_id('tblorders',$user_id, $invoiceid);
     $order_id = $orders['orders']['order'][0]['orderid'];
-    logActivity("=Debug: client products is:".$order_id);
+    logActivity("=Debug: client order id is:".$order_id);
     $products = getClientProducts($user_id, $order_id);
     $product_details = fetch_by_id('tblproducts', $products['products']['product'][0]['pid']);
     logActivity("=Debug: ordered product is:".json_encode($product_details));
@@ -65,7 +65,6 @@ while ($data = mysql_fetch_array($result)) {
     }
   }
  return $apiresults;
-}
 }
 
 add_hook("InvoicePaid",1,"invoice_paid");
