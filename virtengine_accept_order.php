@@ -19,8 +19,6 @@ function after_accept_order($vars) {
     $e->allowed = parse_allowed($product_details['description']);
     $e->allocated_to = " ";
     $e->inputs = [];
-    $e->created_at = " ";
-    $e->updated_at = " ";
     $res = invoke_api('/v2/quotas/content',$e, $user_id);
     logActivity( json_encode( $res ) );
 }
@@ -29,7 +27,7 @@ function parse_allowed($string) {
   $result = array();
   foreach ($array as $value) {
     $arr = explode('-', $value);
-    array_push($result, array(trim($arr[0]) => trim($arr[1])));
+     array_push($result, array("key" => trim($arr[0]), "value" => trim($arr[1])));
   }
   return $result;
  }
@@ -94,14 +92,10 @@ while ($data = mysql_fetch_array($result)) {
 }
 add_hook("AcceptOrder",1,"after_accept_order");
 class OrderedQuotas {
-      public $id;
       public $account_id;
       public $name;
-      public $cost;
       public $allowed;
       public $allocated_to;
       public $inputs;
-      public $created_at;
-      public $updated_at;
 }
 ?>
