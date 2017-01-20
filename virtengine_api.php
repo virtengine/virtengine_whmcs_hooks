@@ -3,8 +3,9 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 //====== TO_DO: START: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
 define(MASTER_KEY, '3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994ee3f');
 define(GATEWAY, '146.0.247.2:9000');
-//====== TO_DO: END: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
 define (CLOUD_ONDEMAND, "Cloud On demand billing");
+
+//====== TO_DO: END: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
 function build_hmac($api_url, $data, $user_id) {
 //Converting the body into md5 hash
   $body_digest = openssl_digest( $data,'md5', true );

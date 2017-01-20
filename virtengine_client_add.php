@@ -46,10 +46,10 @@ function create_account( $vars ) {
 }
 
 function not_found($email) {
-  logActivity("not_found email is " + $email);
+  logActivity("not_found email is ".$email);
   $e = new Account();
   $e->email = $email;
-  $res = invoke_api('/v2/accounts/' + $email, $e);
+  $res = invoke_api('/v2/accounts/'.$email,$email,$e);
   logActivity( json_encode( $res ) );
   logActivity("http_code -" + $res['http_code']);
   if ($res['http_code'] == '404') {
@@ -60,7 +60,7 @@ function not_found($email) {
   return false;
 }
 
-add_hook('ClientAdd',1,'create_account');
+//add_hook('ClientAdd',1,'create_account');
 
 
 class Account {
