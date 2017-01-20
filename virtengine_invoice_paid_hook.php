@@ -1,11 +1,12 @@
 include(ROOTDIR.'/includes/hooks/virtengine_api.php');
 include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 include(ROOTDIR.'/includes/hooks/virtengine_accept_order.php');
+
 <?php
 function invoice_paid($vars) {
     $invoiceid= $vars['invoiceid'];
 
-    if (isCloudOnDemand($invoiceid)) {
+    if (isproduct_cod($invoiceid)) {
         after_add_transaction($vars)
     } else {
       $user_id = fetch_userid_for_invoiceitem($invoiceid);

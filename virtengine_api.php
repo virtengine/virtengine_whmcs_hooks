@@ -48,9 +48,6 @@ function build_header($headerArgs, $user_id) {
     return $headers;
 }
 function invoke_api($api_url, $body_json, $user_id) {
-  logActivity("=Debug: ---  Vertice API: STARTS");
-  logActivity("=Debug: ---  API Parms:".json_encode($body_json));
-  logActivity("=Debug: ---  API Userid:".$user_id);
   $data = json_encode($body_json);
   $headerArgs = build_hmac($api_url,$data, $user_id);
   $headers = build_header($headerArgs, $user_id);
@@ -67,6 +64,6 @@ function invoke_api($api_url, $body_json, $user_id) {
   $get_info = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   $curl_error = curl_error ( $ch );
   curl_close($ch);
-  return  array('Request: ' => $body_json, 'Api Response : ' => $response,'Http Code : ' => $get_info,'Curl Error : ' => $curl_error);
+  return  array('body' => $body_json, 'response' => $response,'http_code' => $get_info,'curl_error' => $curl_error);
 }
 ?>
