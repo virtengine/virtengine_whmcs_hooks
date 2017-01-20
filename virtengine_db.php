@@ -33,6 +33,19 @@ function fetch_by_id($tbl, $id ) {
         }
         return false;
 }
+
+function fetch_data_for_transaction($tbl, $id ) {
+        if(empty($id))
+           return false;
+        $query = "SELECT * FROM ".$tbl." WHERE  invoiceid = '".$id."'";
+        $res = full_query($query);
+        if( mysql_num_rows($res) > 0 ) {
+          $row = mysql_fetch_assoc($res);
+          return $row;
+        }
+        return false;
+}
+
 function fetch_column_in_result($inp, $parent, $child) {
   $rows = json_decode($inp,true);
   $res=array();
