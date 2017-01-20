@@ -4,6 +4,7 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 define(MASTER_KEY, '3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994ee3f');
 define(GATEWAY, '146.0.247.2:9000');
 //====== TO_DO: END: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
+define (CLOUD_ONDEMAND, "Cloud On demand billing");
 function build_hmac($api_url, $data, $user_id) {
 //Converting the body into md5 hash
   $body_digest = openssl_digest( $data,'md5', true );
@@ -47,9 +48,6 @@ function build_header($headerArgs, $user_id) {
     return $headers;
 }
 function invoke_api($api_url, $body_json, $user_id) {
-  logActivity("=Debug: ---  Vertice API: STARTS");
-  logActivity("=Debug: ---  API Parms:".json_encode($body_json));
-  logActivity("=Debug: ---  API Userid:".$user_id);
   $data = json_encode($body_json);
   $headerArgs = build_hmac($api_url,$data, $user_id);
   $headers = build_header($headerArgs, $user_id);
@@ -66,6 +64,6 @@ function invoke_api($api_url, $body_json, $user_id) {
   $get_info = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   $curl_error = curl_error ( $ch );
   curl_close($ch);
-  return  array('Request: ' => $body_json, 'Api Response : ' => $response,'Http Code : ' => $get_info,'Curl Error : ' => $curl_error);
+  return  array('body' => $body_json, 'response' => $response,'http_code' => $get_info,'curl_error' => $curl_error);
 }
 ?>

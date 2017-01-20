@@ -1,39 +1,49 @@
 include(ROOTDIR.'/includes/hooks/virtengine_api.php');
 include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 include(ROOTDIR.'/includes/hooks/virtengine_accept_order.php');
+
 <?php
 function invoice_paid($vars) {
-    logActivity("=Debug: ---  Add paid: STARTS");
-    logActivity("=Debug: ---  Parms:".$vars);
     $invoiceid= $vars['invoiceid'];
-    logActivity("=Debug: invoice is:".$invoiceid);
-    $user_id = getInvoiceItem($invoiceid);
-    logActivity("=Debug: client id  is:".json_encode($user_id));
-    $orders = fetch_by_user_id('tblorders',$user_id, $invoiceid);
-    $order_id = $orders['orders']['order'][0]['orderid'];
-    logActivity("=Debug: client order id is:".$order_id);
-    $products = getClientProducts($user_id, $order_id);
-    $product_details = fetch_by_id('tblproducts', $products['products']['product'][0]['pid']);
-    logActivity("=Debug: ordered product is:".json_encode($product_details));
-    $vertice_email = fetch_user($user_id);
-    $e = new OrderQuota();
-    $e->account_id = $vertice_email;
-    $e->name = $product_details['name'];
-    $e->allowed = parse_allowed($product_details['description']);
-    $e->allocated_to = " ";
-    $e->inputs = [];
-    $res = invoke_api('/v2/quotas/content',$e, $user_id);
-    logActivity( json_encode( $res ));
+
+    if (isproduct_cod($invoiceid)) {
+        after_add_transaction($vars)
+    } else {
+      $user_id = fetch_userid_for_invoiceitem($invoiceid);
+      $orders = fetch_order_by_user_id('tblorders',$user_id, $invoiceid);
+      $order_id = $orders['orders']['order'][0]['orderid'];
+      $products = getClientProducts($user_id, $order_id);
+      $product_details = fetch_by_id('tblproducts', $products['products']['product'][0]['pid']);
+      $vertice_email = fetch_user($user_id);
+      $e = new OrderQuota();
+      $e->account_id = $vertice_email;
+      $e->name = $product_details['name'];
+      $e->allowed = parse_allowed($product_details['description']);
+      $e->allocated_to = " ";
+      $e->inputs = [];
+      $res = invoke_api('/v2/quotas/content',$e, $user_id);
+      logActivity( json_encode( $res ));
+  }
 }
 
-function getInvoiceItem($invoiceid) {
+function fetch_userid_for_invoiceitem($invoiceid) {
 				$result = select_query("tblinvoiceitems", "", array("invoiceid" => $invoiceid));
 				$data = mysql_fetch_array($result);
-				$description = $data['userid'];
-return $description;
+	      $user_id = $data['userid'];
+        return  $user_id;
 }
 
-function fetch_by_user_id($tbl, $id, $invoice_id) {
+
+function isproduct_cod($invoiceid) {
+				$result = select_query("tblinvoiceitems", "", array("invoiceid" => $invoiceid));
+				$data = mysql_fetch_array($result);
+	      $description = $data['description'];
+        $testing_cod = (strpos($description, CLOUD_ONDEMAND) !== false) ;
+        logActivity("> testing cod =" + $testing_cod);
+        return $testing_cod;
+}
+
+function fetch_order_by_user_id($tbl, $id, $invoice_id) {
 $result = select_query($tbl, "", array("userid" => $id));
 $apiresults = array();
 while ($data = mysql_fetch_array($result)) {
