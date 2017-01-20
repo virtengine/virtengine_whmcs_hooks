@@ -1,12 +1,10 @@
-
 include(ROOTDIR.'/includes/hooks/virtengine_api.php');
 include(ROOTDIR.'/includes/hooks/virtengine_db.php');
+
 <?php
 function after_accept_order($vars) {
     $order_id= $vars['orderid'];
-
     $orders = fetch_by_id('tblorders', $order_id);
-
     $user_id = $orders['userid'];
     $products = getClientProducts($user_id, $order_id);
     $product_details = fetch_by_id('tblproducts', $products['products']['product'][0]['pid']);
@@ -18,19 +16,20 @@ function after_accept_order($vars) {
     $e->allowed = parse_allowed($product_details['description']);
     $e->allocated_to = " ";
     $e->inputs = [];
-
     $res = invoke_api('/v2/quotas/content',$e, $user_id);
     logActivity( json_encode( $res ) );
 }
+
 function parse_allowed($string) {
   $array = explode("\n", $string);
   $result = array();
   foreach ($array as $value) {
     $arr = explode('-', $value);
-    array_push($result, array(trim($arr[0]) => trim($arr[1])));
+     array_push($result, array("key" => trim($arr[0]), "value" => trim($arr[1])));
   }
   return $result;
  }
+
 function getClientProducts($client_id, $order_id) {
   $where = array();
   if ($client_id) {
@@ -70,25 +69,27 @@ function getClientProducts($client_id, $order_id) {
 	    $serverdetails = explode("|", $serverdetails);
 
       if ($order_id == $orderid) {
-        $apiresults['products']['product'][] = array(
-          "id" => $id,
-          "clientid" => $userid,
-          "orderid" => $orderid,
-          "pid" => $pid,
-          "name" => $name,
-          "groupname" => $groupname,
-          "status" => $domainstatus,
-          "promoid" => $promoid,
-          "dedicatedip" => $dedicatedip,
-          "assignedips" => $assignedips,
-          "notes" => $notes,
-          "diskusage" => $diskusage,
-          "disklimit" => $disklimit,
-          "bwusage" => $bwusage,
-          "bwlimit" => $bwlimit,
-          "lastupdate" => $lastupdate,
-    );
-    }
+        if (strpos($name,, CLOUD_ONDEMAND) == false) {
+          $apiresults['products']['product'][] = array(
+            "id" => $id,
+            "clientid" => $userid,
+            "orderid" => $orderid,
+            "pid" => $pid,
+            "name" => $name,
+            "groupname" => $groupname,
+            "status" => $domainstatus,
+            "promoid" => $promoid,
+            "dedicatedip" => $dedicatedip,
+            "assignedips" => $assignedips,
+            "notes" => $notes,
+            "diskusage" => $diskusage,
+            "disklimit" => $disklimit,
+            "bwusage" => $bwusage,
+            "bwlimit" => $bwlimit,
+            "lastupdate" => $lastupdate,
+          );
+        }
+      }
   }
  return $apiresults;
 }
