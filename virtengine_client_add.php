@@ -34,7 +34,7 @@ function create_account( $vars ) {
 
       $org_id = fetchFieldByName('org_id', $vars['userid']);
 
-      logActivity("empty org_id =" + empty($org_id));
+      logActivity("empty org_id =".empty($org_id));
 
       if (empty($org_id)) {
         $res = invoke_api('/v2/accounts/content', $e);
@@ -51,7 +51,7 @@ function not_found($email) {
   $e->email = $email;
   $res = invoke_api('/v2/accounts/'.$email,$email,$e);
   logActivity( json_encode( $res ) );
-  logActivity("http_code -" + $res['http_code']);
+  logActivity("http_code -".$res['http_code']);
   if ($res['http_code'] == '404') {
     logActivity("http_code is 404");
   } else {
