@@ -1,7 +1,5 @@
 include(ROOTDIR.'/includes/hooks/virtengine_api.php');
 include(ROOTDIR.'/includes/hooks/virtengine_db.php');
-include(ROOTDIR.'/includes/hooks/virtengine_accept_order.php');
-
 <?php
 function invoice_paid($vars) {
     $invoiceid= $vars['invoiceid'];
