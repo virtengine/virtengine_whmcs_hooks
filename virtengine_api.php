@@ -6,7 +6,7 @@ define(GATEWAY, '146.0.247.2:9000');
 define (CLOUD_ONDEMAND, "Cloud On demand billing");
 
 //====== TO_DO: END: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
-function build_hmac($api_url, $data, $user_id) {
+function build_hmac($api_url, $data, $vertice_email) {
 //Converting the body into md5 hash
   $body_digest = openssl_digest( $data,'md5', true );
   //Encoding the body_digest with base64 encde
@@ -17,7 +17,6 @@ function build_hmac($api_url, $data, $user_id) {
   $signature = $current_date . "\n" .$api_url. "\n" . $encoded_body;
   //Get Client Custom Fields
   $vertice_apikey = (MASTER_KEY);
-  $vertice_email = fetch_user($user_id);
   logActivity("=Debug: ---  build_hmac ".$api_url);
 
   //Creating HMAC hash with sha256
@@ -37,6 +36,7 @@ function build_header($headerArgs, $user_id) {
   logActivity("=Debug: ---  build_header");
   logActivity("=Debug: final_hmac:".$final_hmac);
   logActivity("=Debug: currrent_date:".$current_date);
+  logActivity("=Debug: currrent_date:".$organization_id);
   $headers =  array(
     'Accept: application/json',
     'Content-Type: application/json',
@@ -48,15 +48,35 @@ function build_header($headerArgs, $user_id) {
     'X-Megam-MASTERKEY: true');
     return $headers;
 }
-function invoke_api($api_url, $body_json, $user_id) {
+function invoke_api($api_url, $body_json, $email, $user_id) {
   $data = json_encode($body_json);
-  $headerArgs = build_hmac($api_url,$data, $user_id);
+  $headerArgs = build_hmac($api_url,$data, $email);
   $headers = build_header($headerArgs, $user_id);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, (GATEWAY).$api_url);
   curl_setopt($ch,CURLOPT_HTTPHEADER, $headers);
   curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 1000);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  $response = curl_exec($ch);
+  $get_info = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  $curl_error = curl_error ( $ch );
+  curl_close($ch);
+  return  array('body' => $body_json, 'response' => $response,'http_code' => $get_info,'curl_error' => $curl_error);
+}
+
+function invoke_api_get($api_url, $body_json, $email, $user_id) {
+  $data = json_encode($body_json);
+  $headerArgs = build_hmac($api_url,$data, $email);
+  $headers = build_header($headerArgs, $user_id);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, (GATEWAY).$api_url);
+  curl_setopt($ch,CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($ch, CURLOPT_GET, true);
+  curl_setopt($ch, CURLOPT_GETFIELDS, $data);
   curl_setopt($ch, CURLOPT_TIMEOUT, 1000);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
