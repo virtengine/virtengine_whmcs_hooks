@@ -133,7 +133,7 @@ function getClientProducts($client_id, $order_id) {
 	    $orderid = $data['orderid'];
 	    $pid = $data['packageid'];
 	    $name = $data['productname'];
-      $groupname = $data[''];
+            $groupname = $data[''];
 	    $promoid = $data['promoid'];
 	    $ipaddress = $data['ipaddress'];
 	    $dedicatedip = $data['dedicatedip'];

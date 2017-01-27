@@ -6,13 +6,18 @@ function verify_email($vars) {
  if(strlen($custom_fields) == 0)
  {
   $email = $vars['email'];
-  $res = invoke_api_get('/v2/accounts/'.$email,$email,$email);
+  $body = '';
+  $res = invoke_api_get('/v2/accounts/'.$email,$body, $email);
   logActivity( json_encode( $res ) );
   logActivity("http_code -".$res['http_code']);
-  if ($res['http_code'] == 200 || $res['http_code'] == 201) {
+  if ($res['http_code'] !== 404) {
     $error = "Email alredy exit in vertice";
     return $error;
   }
+else
+{
+return false;
+}
 }
 }
 add_hook('ClientDetailsValidation',0,'verify_email');

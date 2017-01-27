@@ -2,7 +2,7 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 <?php
 //====== TO_DO: START: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
 define(MASTER_KEY, '3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994ee3f');
-define(GATEWAY, '146.0.247.2:9000');
+define(GATEWAY, '');
 define (CLOUD_ONDEMAND, "Cloud On demand billing");
 
 //====== TO_DO: END: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
@@ -36,7 +36,7 @@ function build_header($headerArgs, $user_id) {
   logActivity("=Debug: ---  build_header");
   logActivity("=Debug: final_hmac:".$final_hmac);
   logActivity("=Debug: currrent_date:".$current_date);
-  logActivity("=Debug: currrent_date:".$organization_id);
+  logActivity("=Debug: org_id:".$organization_id);
   $headers =  array(
     'Accept: application/json',
     'Content-Type: application/json',
@@ -67,6 +67,7 @@ function invoke_api($api_url, $body_json, $email, $user_id) {
   curl_close($ch);
   return  array('body' => $body_json, 'response' => $response,'http_code' => $get_info,'curl_error' => $curl_error);
 }
+
 
 function invoke_api_get($api_url, $body_json, $email, $user_id) {
   $data = json_encode($body_json);

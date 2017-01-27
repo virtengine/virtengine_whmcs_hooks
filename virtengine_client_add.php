@@ -15,7 +15,7 @@ function create_account( $vars ) {
     $e->approval->approved_at = null;
     $e->dates->last_posted_at = null;
     $e->dates->last_emailed_at = null;
-  	$e->dates->previous_visit_at = null;
+    $e->dates->previous_visit_at = null;
     $e->dates->first_seen_at = null;
     $e->dates->created_at = null;
     $e->phone->phone = $vars['phonenumber'];
@@ -33,6 +33,7 @@ function create_account( $vars ) {
     if (empty($org_id))
     {
       $res = invoke_api('/v2/accounts/content', $e ,$vars['email']);
+//    $res_org = invoke_api('/v2/organizations',"",$vars['email']);
       create_addon($vars);
       logActivity( json_encode( $res ) );
     }
@@ -49,9 +50,9 @@ function create_addon( $varr ) {
         $e->provider_id = $varr['userid'];
         $e->options = null;
         $e->created_at = null;
-        $user_id = $var['userid'];
+        $user_id = $varr['userid'];
         $org_id = fetchFieldByName('org_id', $varr['userid']);
-        $res = invoke_api('/v2/addons/content', $e, $varr['email'], $org_id);
+        $res = invoke_api('/v2/addons/content', $e, $varr['email']);
           logActivity(json_encode( $res ));
     }
 add_hook('ClientAdd',1,'create_account');
