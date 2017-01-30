@@ -32,8 +32,7 @@ function create_account( $vars ) {
     logActivity("empty org_id =".empty($org_id));
     if (empty($org_id))
     {
-      $res = invoke_api('/v2/accounts/content', $e ,$vars['email']);
-//    $res_org = invoke_api('/v2/organizations',"",$vars['email']);
+      $res = invoke_api('/v2/accounts/content', $e ,$vars['userid']);
       create_addon($vars);
       logActivity( json_encode( $res ) );
     }
@@ -51,8 +50,7 @@ function create_addon( $varr ) {
         $e->options = null;
         $e->created_at = null;
         $user_id = $varr['userid'];
-        $org_id = fetchFieldByName('org_id', $varr['userid']);
-        $res = invoke_api('/v2/addons/content', $e, $varr['email']);
+        $res = invoke_api('/v2/addons/content', $e, $user_id);
           logActivity(json_encode( $res ));
     }
 add_hook('ClientAdd',1,'create_account');

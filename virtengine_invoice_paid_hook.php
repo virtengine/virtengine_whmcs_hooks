@@ -18,7 +18,7 @@ function invoice_paid($vars) {
       $e->allowed = parse_allowed($product_details['description']);
       $e->allocated_to = " ";
       $e->inputs = [];
-      $res = invoke_api('/v2/quotas/content',$e,$vertice_email,$user_id);
+      $res = invoke_api('/v2/quotas/content',$e,$user_id);
       logActivity( json_encode( $res ));
 
 }
@@ -40,7 +40,7 @@ function common_add_transaction( $vars ) {
         $user_id = $vars['userid'];
         $email = fetch_user($user_id);
 				//Forming the signature
-				  $res = invoke_api("/v2/billingtransactions/content", $e,$email,$user_id);
+				  $res = invoke_api("/v2/billingtransactions/content", $e,$user_id);
 				  logActivity( json_encode( $res ) );
 	}
 

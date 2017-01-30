@@ -6,7 +6,7 @@ define(GATEWAY, '');
 define (CLOUD_ONDEMAND, "Cloud On demand billing");
 
 //====== TO_DO: END: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
-function build_hmac($api_url, $data, $vertice_email) {
+function build_hmac($api_url, $data, $user_id) {
 //Converting the body into md5 hash
   $body_digest = openssl_digest( $data,'md5', true );
   //Encoding the body_digest with base64 encde
@@ -18,6 +18,12 @@ function build_hmac($api_url, $data, $vertice_email) {
   //Get Client Custom Fields
   $vertice_apikey = (MASTER_KEY);
   logActivity("=Debug: ---  build_hmac ".$api_url);
+
+  if (is_numeric($user_id)) {
+   $vertice_email = fetch_user($user_id);
+ } else {
+   $vertice_email = $user_id;
+ }
 
   //Creating HMAC hash with sha256
   $hash = hash_hmac( 'sha256', rtrim($signature), $vertice_apikey );
@@ -32,7 +38,7 @@ function build_hmac($api_url, $data, $vertice_email) {
 function build_header($headerArgs, $user_id) {
   $final_hmac = $headerArgs['final_hmac'];
   $current_date = $headerArgs['current_date'];
-  $organization_id = fetchFieldByName('org_id',$user_id);
+   $organization_id = fetchFieldByName('org_id',$user_id);
   logActivity("=Debug: ---  build_header");
   logActivity("=Debug: final_hmac:".$final_hmac);
   logActivity("=Debug: currrent_date:".$current_date);
@@ -48,9 +54,9 @@ function build_header($headerArgs, $user_id) {
     'X-Megam-MASTERKEY: true');
     return $headers;
 }
-function invoke_api($api_url, $body_json, $email, $user_id) {
+function invoke_api($api_url, $body_json, $user_id) {
   $data = json_encode($body_json);
-  $headerArgs = build_hmac($api_url,$data, $email);
+  $headerArgs = build_hmac($api_url,$data, $user_id);
   $headers = build_header($headerArgs, $user_id);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, (GATEWAY).$api_url);
@@ -69,9 +75,9 @@ function invoke_api($api_url, $body_json, $email, $user_id) {
 }
 
 
-function invoke_api_get($api_url, $body_json, $email, $user_id) {
+function invoke_api_get($api_url, $body_json,$user_id) {
   $data = json_encode($body_json);
-  $headerArgs = build_hmac($api_url,$data, $email);
+  $headerArgs = build_hmac($api_url,$data, $user_id);
   $headers = build_header($headerArgs, $user_id);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, (GATEWAY).$api_url);
