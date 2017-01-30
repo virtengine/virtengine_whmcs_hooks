@@ -38,7 +38,6 @@ function common_add_transaction( $vars ) {
         $e->currency_type = "USD";
         $e->inputs = $quota_array;
         $user_id = $vars['userid'];
-        $email = fetch_user($user_id);
 				//Forming the signature
 				  $res = invoke_api("/v2/billingtransactions/content", $e,$user_id);
 				  logActivity( json_encode( $res ) );

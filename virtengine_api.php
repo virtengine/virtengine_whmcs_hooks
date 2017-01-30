@@ -2,7 +2,7 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 <?php
 //====== TO_DO: START: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
 define(MASTER_KEY, '3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994ee3f');
-define(GATEWAY, '');
+define(GATEWAY, '192.168.0.115:9000');
 define (CLOUD_ONDEMAND, "Cloud On demand billing");
 
 //====== TO_DO: END: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
