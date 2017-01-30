@@ -18,7 +18,7 @@ function invoice_paid($vars) {
       $e->allowed = parse_allowed($product_details['description']);
       $e->allocated_to = " ";
       $e->inputs = [];
-      $res = invoke_api('/v2/quotas/content',$e, $user_id);
+      $res = invoke_api('/v2/quotas/content',$e,$user_id);
       logActivity( json_encode( $res ));
 
 }
@@ -38,9 +38,8 @@ function common_add_transaction( $vars ) {
         $e->currency_type = "USD";
         $e->inputs = $quota_array;
         $user_id = $vars['userid'];
-
 				//Forming the signature
-				  $res = invoke_api("/v2/billingtransactions/content", $e, $user_id);
+				  $res = invoke_api("/v2/billingtransactions/content", $e,$user_id);
 				  logActivity( json_encode( $res ) );
 	}
 
@@ -133,7 +132,7 @@ function getClientProducts($client_id, $order_id) {
 	    $orderid = $data['orderid'];
 	    $pid = $data['packageid'];
 	    $name = $data['productname'];
-      $groupname = $data[''];
+            $groupname = $data[''];
 	    $promoid = $data['promoid'];
 	    $ipaddress = $data['ipaddress'];
 	    $dedicatedip = $data['dedicatedip'];

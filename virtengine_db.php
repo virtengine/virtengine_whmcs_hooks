@@ -9,8 +9,9 @@ function fetchFieldByName( $name, $userid ){
           $row = mysql_fetch_assoc($res);
           return $row['value'];
         }
-        return false;
+        return "0";
 }
+
 function fetch_user( $userid ){
         if(empty($userid) )
                 return false;
@@ -22,6 +23,8 @@ function fetch_user( $userid ){
         }
         return false;
 }
+
+
 function fetch_by_id($tbl, $id ) {
         if(empty($id))
            return false;
@@ -46,13 +49,4 @@ function fetch_data_for_transaction($tbl, $id ) {
         return false;
 }
 
-function fetch_column_in_result($inp, $parent, $child) {
-  $rows = json_decode($inp,true);
-  $res=array();
-  foreach($rows[$parent] as $row) {
-    $res[$row[$child]] = $row[$child];
-  }
-  logActivity(json_encode($res));
-  return $res;
-}
 ?>
