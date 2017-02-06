@@ -3,7 +3,7 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 <?php
 function invoice_paid($vars) {
     $invoiceid= $vars['invoiceid'];
-    $tranaction_data = fetch_data_for_transaction("tblaccounts",$invoiceid);
+    $tranaction_data = fetch_data_for_transaction("tblinvoiceitems",$invoiceid);
     common_add_transaction($tranaction_data);
     if (isproduct_cod($invoiceid) == "true") {
       $user_id = fetch_userid_for_invoiceitem($invoiceid);
@@ -18,6 +18,8 @@ function invoice_paid($vars) {
       $e->allowed = parse_allowed($product_details['description']);
       $e->allocated_to = " ";
       $e->inputs = [];
+      $e->quota_type = "VM";
+      $e->status = "active";
       $res = invoke_api('/v2/quotas/content',$e,$user_id);
       logActivity( json_encode( $res ));
 
@@ -27,13 +29,13 @@ function common_add_transaction( $vars ) {
         $invoiceid = $vars['invoiceid'];
         $invoice_id = isproduct_cod($invoiceid);
         $quota_array = array(array('key' => "quota_based", 'value' => $invoice_id));
-        $date = date('d/m/Y', strtotime($vars['date']));
+        $date = date('d/m/Y', strtotime($vars['duedate']));
         $e = new TransactionBill();
-        $e->gateway = $vars['gateway'];
-        $e->amountin  = $vars['amountin'];
-        $e->amountout  = $vars['amountout'];
-        $e->fees = $vars['fees'];
-        $e->tranid = $vars['transid'];
+        $e->gateway = $vars['paymentmethod'];
+        $e->amountin  = $vars['amount'];
+        $e->amountout  = "0.00";
+        $e->fees = "0.00";
+        $e->tranid = "";
         $e->trandate = $date;
         $e->currency_type = "USD";
         $e->inputs = $quota_array;
@@ -68,11 +70,11 @@ $result = select_query($tbl, "", array("userid" => $id));
 $apiresults = array();
 while ($data = mysql_fetch_array($result)) {
 	$id = $data['id'];
-  $ordernum = $data['ordernum'];
+        $ordernum = $data['ordernum'];
 	$userid = $data['userid'];
 	$contactid = $data['contactid'];
 	$date = $data['date'];
-  $nameservers = $data['nameservers'];
+        $nameservers = $data['nameservers'];
 	$transfersecret = $data['transfersecret'];
 	$renewals = $data['renewals'];
 	$promocode = $data['promocode'];
@@ -87,7 +89,7 @@ while ($data = mysql_fetch_array($result)) {
   $fraudmodule = $data['fraudmodule'];
   $fraudoutput = $data['fraudoutput'];
   $notes = $data['notes'];
-  if ($invoiceid == $invoice_id) {
+  if ($invoiceid == $invoice_id || $invoiceid == 0) {
   $apiresults['orders']['order'][] = array(
     "orderid" => $id,
     "invoiceid" => $invoiceid,
@@ -188,3 +190,4 @@ class TransactionBill {
           public $currency_type;
 }
 ?>
+

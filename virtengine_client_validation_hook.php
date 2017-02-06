@@ -11,7 +11,7 @@ function verify_email($vars) {
   logActivity( json_encode( $res ) );
   logActivity("http_code -".$res['http_code']);
   if ($res['http_code'] !== 404) {
-    $error = "Email alredy exit in vertice";
+    $error = "Email alredy exists in Virtengine";
     return $error;
   }
 else
