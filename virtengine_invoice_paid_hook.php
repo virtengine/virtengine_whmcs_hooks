@@ -19,7 +19,7 @@ function invoice_paid($vars) {
       $e->allocated_to = " ";
       $e->inputs = [];
       $e->quota_type = "VM";
-      $e->status = "active";
+      $e->status = "paid";
       $res = invoke_api('/v2/quotas/content',$e,$user_id);
       logActivity( json_encode( $res ));
 
@@ -70,11 +70,11 @@ $result = select_query($tbl, "", array("userid" => $id));
 $apiresults = array();
 while ($data = mysql_fetch_array($result)) {
 	$id = $data['id'];
-        $ordernum = $data['ordernum'];
+  $ordernum = $data['ordernum'];
 	$userid = $data['userid'];
 	$contactid = $data['contactid'];
 	$date = $data['date'];
-        $nameservers = $data['nameservers'];
+  $nameservers = $data['nameservers'];
 	$transfersecret = $data['transfersecret'];
 	$renewals = $data['renewals'];
 	$promocode = $data['promocode'];
@@ -190,4 +190,3 @@ class TransactionBill {
           public $currency_type;
 }
 ?>
-
