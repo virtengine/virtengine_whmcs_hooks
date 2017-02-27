@@ -58,7 +58,7 @@ function isproduct_cod($invoiceid) {
   $result = select_query("tblinvoiceitems", "", array("invoiceid" => $invoiceid));
   $data = mysql_fetch_array($result);
   $description = $data['description'];
-  if (strpos($description, CLOUD_ONDEMAND) !== false) {
+  if (strpos($description, CLOUD_ONDEMAND) !== false  || strpos($description, ADD_FUNDS) !== false) {
      return 'false';
   } else {
   return 'true';
