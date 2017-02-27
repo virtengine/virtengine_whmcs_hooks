@@ -1,8 +1,6 @@
-include(ROOTDIR.'/includes/hooks/virtengine_api.php');
-include(ROOTDIR.'/includes/hooks/virtengine_db.php');
-
+include(ROOTDIR.'/includes/hook/virtengine_api.php');
+include(ROOTDIR.'/includes/hook/virtengine_db.php');
 <?php
-
 function create_account( $vars ) {
     $e = new Account();
     $e->api_key = bin2hex(openssl_random_pseudo_bytes(16));
@@ -17,7 +15,7 @@ function create_account( $vars ) {
     $e->approval->approved_at = null;
     $e->dates->last_posted_at = null;
     $e->dates->last_emailed_at = null;
-  	$e->dates->previous_visit_at = null;
+    $e->dates->previous_visit_at = null;
     $e->dates->first_seen_at = null;
     $e->dates->created_at = null;
     $e->phone->phone = $vars['phonenumber'];
@@ -30,11 +28,12 @@ function create_account( $vars ) {
     $e->suspend->suspended = null;
     $e->suspend->suspended_at = null;
     $e->suspend->suspended_till = null;
-
     $org_id = fetchFieldByName('org_id', $vars['userid']);
+    logActivity("empty org_id =".empty($org_id));
     if (empty($org_id))
     {
-      $res = invoke_api('/v2/accounts/content', $e);
+      $res = invoke_api('/v2/accounts/content', $e ,$vars['userid']);
+      create_addon($vars);
       logActivity( json_encode( $res ) );
     }
     else
@@ -42,10 +41,19 @@ function create_account( $vars ) {
       return false;
     }
 }
-
+function create_addon( $varr ) {
+        $e = new Addon();
+        $e->account_id = $varr['email'];
+        $e->id = null;
+        $e->provider_name = "WHMCS";
+        $e->provider_id = $varr['userid'];
+        $e->options = null;
+        $e->created_at = null;
+        $user_id = $varr['userid'];
+        $res = invoke_api('/v2/addons/content', $e, $user_id);
+          logActivity(json_encode( $res ));
+    }
 add_hook('ClientAdd',1,'create_account');
-
-
 class Account {
       public $name;
       public $email;
@@ -60,4 +68,12 @@ class Account {
       public $states;
 }
 
+class Addon {
+      public $account_id;
+      public $provider_name;
+      public $id;
+      public $options;
+      public $create_at;
+      public $provider_id;
+}
 ?>
