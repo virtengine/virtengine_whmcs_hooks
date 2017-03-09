@@ -3,8 +3,7 @@ include(ROOTDIR.'/includes/hooks/virtengine_db.php');
 //====== TO_DO: START: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
 define(MASTER_KEY, '3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994ee3f');
 define(GATEWAY, '192.168.0.115:9000');
-define (CLOUD_ONDEMAND, "Cloud On demand billing");
-define (ADD_FUNDS, "Add Funds");
+define(HOSTING, 'Hosting');
 
 //====== TO_DO: END: PLEASE CUSTOMIZE THIS AS PER YOUR SITE.
 function build_hmac($api_url, $data, $user_id) {
@@ -21,7 +20,8 @@ function build_hmac($api_url, $data, $user_id) {
   logActivity("=Debug: ---  build_hmac ".$api_url);
 
   if (is_numeric($user_id)) {
-   $vertice_email = fetch_user($user_id);
+    $user_data = fetch_data_by_id("tblclients",$user_id);
+    $vertice_email = $user_data['email'];
  } else {
    $vertice_email = $user_id;
  }
