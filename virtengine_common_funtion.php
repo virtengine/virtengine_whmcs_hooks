@@ -21,7 +21,7 @@ function add_data($vars){
   else {
     $order_id = "";
     $product_name = "";
-    $product_description = "";
+    $product_description = [];
     $quota_type = "";
     $status = "";
   }
