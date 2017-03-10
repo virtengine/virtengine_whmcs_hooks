@@ -38,7 +38,7 @@ function add_data($vars){
   $e->trandate = $date;
   $e->amount = $data['amount'];
   logActivity(json_encode( $e ));
-  $res = invoke_api('/v2/billings', $e ,$data['userid']);
+  $res = invoke_api('/v2/billings/content', $e ,$data['userid']);
   logActivity( json_encode( $res ) );
 }
 
