@@ -21,7 +21,7 @@ function add_data($vars){
   else {
     $order_id = "";
     $product_name = "";
-    $product_description = "";
+    $product_description = [];
     $quota_type = "";
     $status = "";
   }
@@ -38,7 +38,7 @@ function add_data($vars){
   $e->trandate = $date;
   $e->amount = $data['amount'];
   logActivity(json_encode( $e ));
-  $res = invoke_api('/v2/billings', $e ,$data['userid']);
+  $res = invoke_api('/v2/billings/content', $e ,$data['userid']);
   logActivity( json_encode( $res ) );
 }
 
