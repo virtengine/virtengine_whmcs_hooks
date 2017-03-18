@@ -17,6 +17,10 @@ function add_data($vars){
     $product_description = parse_allowed($product_details['description']);
     $quota_type = "VM";
     $status = $invoice_data['status'];
+    if($status == "Paid" && $invoice_data['credit'] !== "0.00"){
+    $paymentmethod = "offlinecc";
+    }
+    $paymentmethod = $data['paymentmethod'];
   }
   else {
     $order_id = "";
@@ -24,6 +28,7 @@ function add_data($vars){
     $product_description = [];
     $quota_type = "";
     $status = "";
+    $paymentmethod = $data['paymentmethod'];
   }
   $e = new CommonData();
   $e->name = $product_name;
@@ -33,7 +38,7 @@ function add_data($vars){
   $e->status = $status;
   $e->orderid = $order_id;
   $e->key = $data["type"];
-  $e->gateway = $data['paymentmethod'];
+  $e->gateway = $paymentmethod;
   $e->currency_type = $currency_type['code'];
   $e->trandate = $date;
   $e->amount = $data['amount'];
