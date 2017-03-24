@@ -20,7 +20,9 @@ function add_data($vars){
     if($status == "Paid" && $invoice_data['credit'] !== "0.00"){
     $paymentmethod = "offlinecc";
     }
-    $paymentmethod = $data['paymentmethod'];
+    else{
+      $paymentmethod = $data['paymentmethod'];
+    }  
   }
   else {
     $order_id = "";
