@@ -17,12 +17,12 @@ function add_data($vars){
     $product_description = parse_allowed($product_details['description']);
     $quota_type = "VM";
     $status = $invoice_data['status'];
-    if($status == "Paid" && $invoice_data['credit'] !== "0.00"){
+    if($status == "Paid" && $invoice_data['credit'] != 0.00){
     $paymentmethod = "offlinecc";
     }
     else{
       $paymentmethod = $data['paymentmethod'];
-    }  
+    }
   }
   else {
     $order_id = "";
