@@ -9,7 +9,7 @@ function fetchFieldByName( $name, $userid ){
           $row = mysql_fetch_assoc($res);
           return $row['value'];
         }
-        return "0";
+        return false;
 }
 
 function fetch_data_by_id($tbl, $id ) {

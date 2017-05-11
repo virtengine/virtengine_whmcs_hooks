@@ -39,11 +39,14 @@ function build_hmac($api_url, $data, $user_id) {
 function build_header($headerArgs, $user_id) {
   $final_hmac = $headerArgs['final_hmac'];
   $current_date = $headerArgs['current_date'];
-   $organization_id = fetchFieldByName('org_id',$user_id);
-  logActivity("=Debug: ---  build_header");
-  logActivity("=Debug: final_hmac:".$final_hmac);
-  logActivity("=Debug: currrent_date:".$current_date);
-  logActivity("=Debug: org_id:".$organization_id);
+   $fetch_org_id = fetchFieldByName('org_id',$user_id);
+   if(empty($fetch_org_id))
+   {
+     $organization_id = "123";
+   }
+   else{
+     $organization_id = $fetch_org_id;
+   }
   $headers =  array(
     'Accept: application/json',
     'Content-Type: application/json',

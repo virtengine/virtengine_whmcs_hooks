@@ -21,7 +21,7 @@ function create_account( $vars ) {
     $e->phone->phone = $vars['phonenumber'];
     $e->phone->phone_verified = null;
     $e->registration_ip_address = '';
-    $e->states->authority = null;
+    $e->states->authority = "regular";
     $e->states->active = "true";
     $e->states->blocked = null;
     $e->states->staged = null;
