@@ -8,7 +8,7 @@ Go to whmcsroot/includes/ and perform the following.
 
 cd /var/www/html/whmcs/includes
 
-git clone https://gitlab.com/megamsys/whmcs_hooks
+git clone https://github.com/virtengine/virtengine_whmcs_hooks
 
 cp -r whmcs_hooks ./hooks
 
